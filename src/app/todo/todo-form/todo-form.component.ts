@@ -1,26 +1,29 @@
-import { Component, OnInit } from '@angular/core';
-import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
-import {TodoService} from '../../services/todo.service';
-import {Todo} from '../../models/todo';
-import {Observable} from 'rxjs';
+import { Component, OnInit } from "@angular/core";
+import { FormBuilder, FormControl, FormGroup } from "@angular/forms";
+import { TodoService } from "../../services/todo.service";
+import { Todo } from "../../models/todo";
+import { Observable } from "rxjs";
 
 @Component({
-  selector: 'app-todo-form',
-  templateUrl: './todo-form.component.html',
-  styleUrls: ['./todo-form.component.scss']
+  selector: "app-todo-form",
+  templateUrl: "./todo-form.component.html",
+  styleUrls: ["./todo-form.component.scss"]
 })
 export class TodoFormComponent implements OnInit {
-  value = new FormControl('');
+  value = new FormControl("");
   priority = new FormControl(1);
   priorityOptions = [1, 2, 3, 4, 5, 6, 7, 8];
   todoForm: FormGroup;
   selectedTodo: Observable<Todo>;
   selectedTodoId: number;
 
-  constructor(private formBuilder: FormBuilder, private todoService: TodoService) {
+  constructor(
+    private formBuilder: FormBuilder,
+    private todoService: TodoService
+  ) {
     this.todoForm = this.formBuilder.group({
-      value: '',
-      priority: ''
+      value: "",
+      priority: ""
     });
   }
 
@@ -39,9 +42,10 @@ export class TodoFormComponent implements OnInit {
       todo.id = this.selectedTodoId;
       this.todoService.put(todo as Todo);
     } else {
-      this.todoService.add(todo as Todo);
+      this.todoService.add(todo as Todo).subscribe(data => {
+        console.log(data);
+      });
     }
     this.todoForm.reset();
   }
-
 }
